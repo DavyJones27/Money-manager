@@ -75,6 +75,6 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User finById(Integer userId) {
-        return jdbcTemplate.queryForObject(SQL_COUNT_BY_EMAIL, userRowMapper, userId);
+        return jdbcTemplate.queryForObject(SQL_FIND_BY_ID, userRowMapper, userId);
     }
 }
