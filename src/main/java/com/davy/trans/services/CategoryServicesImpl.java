@@ -19,7 +19,7 @@ public class CategoryServicesImpl implements CategoryServices {
 
     @Override
     public List<Category> fetchAllCategories(Integer userId) {
-        return null;
+        return categoryRepository.findAll(userId);
     }
 
     @Override
@@ -37,6 +37,7 @@ public class CategoryServicesImpl implements CategoryServices {
 
     @Override
     public Category updateCategory(Category category) throws EtBadRequestException {
+        categoryRepository.update(category);
         return null;
     }
 

@@ -8,7 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Locale;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/categories")
@@ -18,24 +20,63 @@ public class CategoryResource {
     CategoryServices categoryServices;
 
     @GetMapping("")
-    public String getAllCategories(HttpServletRequest request) {
+    public ResponseEntity<List<Category>> getAllCategories(HttpServletRequest request) {
 
-        int useId = (Integer) request.getAttribute("userId");
+        int useId = getUserId(request);
+        List<Category> categories = categoryServices.fetchAllCategories(useId);
 
-        return "userId" + useId;
-
-
+        return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
-    @PostMapping("")
-    public ResponseEntity<Locale.Category> addCategory(HttpServletRequest request, @RequestBody Category category) {
+    @GetMapping("/{categoryId}")
+    public ResponseEntity<Category> getCategoryById(
+            HttpServletRequest request,
+            @PathVariable("categoryId") Integer categoryId
+    ) {
 
-        category.setUserId((Integer) request.getAttribute("userId"));
+        int userId = getUserId(request);
+        Category category = Category
+                .builder()
+                .categoryId(categoryId)
+                .userId(userId).build();
+
+        Category categoryRet = categoryServices.fetchCategoryById(category);
+
+        return new ResponseEntity<>(categoryRet, HttpStatus.OK);
+    }
+
+
+    @PostMapping("")
+    public ResponseEntity<Category> addCategory(HttpServletRequest request, @RequestBody Category category) {
+
+        category.setUserId(getUserId(request));
 
         Category categoryRet = categoryServices.addCategory(category);
 
 
-        return new ResponseEntity(categoryRet, HttpStatus.CREATED);
+        return new ResponseEntity<>(categoryRet, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{categoryId}")
+    public ResponseEntity<Map<String, Boolean>> updateCategory(
+            HttpServletRequest request,
+            @PathVariable("categoryId") Integer categoryId,
+            @RequestBody Category category
+    ) {
+        category.setUserId(getUserId(request));
+        category.setCategoryId(categoryId);
+        categoryServices.updateCategory(category);
+
+        Map<String, Boolean> map = new HashMap<>();
+
+        map.put("Success", true);
+
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
+    private Integer getUserId(HttpServletRequest request) {
+
+        return (Integer) request.getAttribute("userId");
     }
 
 }
