@@ -37,7 +37,7 @@ public class userResources {
 
         User user = userService.validateUser(userMap);
 
-        return new ResponseEntity<>(generateJWTToken(userMap), HttpStatus.OK);
+        return new ResponseEntity<>(generateJWTToken(user), HttpStatus.OK);
     }
 
     private Map<String, String> generateJWTToken(User user) {
