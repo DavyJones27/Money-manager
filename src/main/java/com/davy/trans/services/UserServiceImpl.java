@@ -17,8 +17,12 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
 
     @Override
-    public User validateUser(String email, String password) throws EtAuthException {
-        return null;
+    public User validateUser(User user) throws EtAuthException {
+
+        if (user.getEmail() != null) user.setEmail(user.getEmail().toLowerCase());
+
+        return userRepository.findByEmailAndPassword(user);
+
     }
 
     @Override

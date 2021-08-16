@@ -5,7 +5,7 @@ import com.davy.trans.exceptions.EtAuthException;
 
 public interface UserService {
 
-    User validateUser(String email, String password) throws EtAuthException;
+    User validateUser(User user) throws EtAuthException;
 
     User registerUser(User user) throws EtAuthException;
 }

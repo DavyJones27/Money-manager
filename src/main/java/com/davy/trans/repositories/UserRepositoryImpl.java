@@ -2,6 +2,7 @@ package com.davy.trans.repositories;
 
 import com.davy.trans.domain.User;
 import com.davy.trans.exceptions.EtAuthException;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -34,11 +35,15 @@ public class UserRepositoryImpl implements UserRepository {
                 .firstName(rs.getString("FIRST_NAME"))
                 .lastName(rs.getString("LAST_NAME"))
                 .email(rs.getString("EMAIL"))
+                .password(rs.getString("PASSWORD"))
                 .build();
     });
 
     @Override
     public Integer create(User user) throws EtAuthException {
+
+        String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(10));
+
         try {
 
             KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -51,7 +56,7 @@ public class UserRepositoryImpl implements UserRepository {
                 ps.setString(1, user.getFirstName());
                 ps.setString(2, user.getLastName());
                 ps.setString(3, user.getEmail());
-                ps.setString(4, user.getPassword());
+                ps.setString(4, hashedPassword);
                 return ps;
             }, keyHolder);
 
@@ -63,8 +68,17 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User findByEmailAndPassword(String email, String password) throws EtAuthException {
-        return null;
+    public User findByEmailAndPassword(User user) throws EtAuthException {
+        try {
+            User userData = jdbcTemplate.queryForObject(SQL_FIND_BY_EMAIL, userRowMapper, user.getEmail());
+
+            if (!BCrypt.checkpw(user.getPassword(), userData.getPassword()))
+                throw new EtAuthException("Invalid email/password");
+
+            return userData;
+        } catch (Exception e) {
+            throw new EtAuthException("Invalid email/password");
+        }
     }
 
     @Override
