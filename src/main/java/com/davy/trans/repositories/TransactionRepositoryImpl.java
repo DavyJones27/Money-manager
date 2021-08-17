@@ -28,8 +28,21 @@ public class TransactionRepositoryImpl implements TransactionRepository {
             "AMOUNT, " +
             "NOTE, " +
             "TRANSACTION_DATE " +
-            "FROM ET_TRANSACTIONS WHERE USER_ID = ? AND CATEGORY_ID = ? AND TRANSACTION_ID = ? ";
+            "FROM ET_TRANSACTIONS " +
+            "WHERE USER_ID = ? AND CATEGORY_ID = ? AND TRANSACTION_ID = ? ";
 
+    private static final String SQL_FIND_ALL = "SELECT " +
+            "TRANSACTION_ID, " +
+            "CATEGORY_ID, " +
+            "USER_ID, " +
+            "AMOUNT, " +
+            "NOTE, " +
+            "TRANSACTION_DATE " +
+            "FROM ET_TRANSACTIONS WHERE USER_ID = ? AND CATEGORY_ID = ? ";
+
+    private static final String SQL_UPDATE = "UPDATE ET_TRANSACTIONS " +
+            "SET AMOUNT = ?, NOTE = ?, TRANSACTION_DATE = ? " +
+            "WHERE USER_ID = ? AND CATEGORY_ID = ? AND TRANSACTION_ID = ? ";
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -47,7 +60,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
 
     @Override
     public List<Transaction> findAll(Integer userId, Integer categoryId) {
-        return null;
+        return jdbcTemplate.query(SQL_FIND_ALL, transactionRowMapper, userId, categoryId);
     }
 
     @Override
@@ -85,6 +98,21 @@ public class TransactionRepositoryImpl implements TransactionRepository {
 
     @Override
     public void update(Transaction transaction) throws EtBadRequestException {
+
+        try {
+            jdbcTemplate.update(
+                    SQL_UPDATE,
+                    transaction.getAmount(),
+                    transaction.getNote(),
+                    transaction.getTransactionDate(),
+                    transaction.getUserId(),
+                    transaction.getCategoryId(),
+                    transaction.getTransactionId()
+            );
+
+        } catch (Exception e) {
+            throw new EtBadRequestException("Bad data");
+        }
 
     }
 
