@@ -10,13 +10,13 @@ public interface CategoryRepository {
 
     List<Category> findAll(Integer userId) throws EtResourcesNotFoundException;
 
-    Category findById(Integer userId,   Integer categoryId) throws EtResourcesNotFoundException;
+    Category findById(Integer userId, Integer categoryId) throws EtResourcesNotFoundException;
 
-    Integer create (Category category) throws EtBadRequestException;
+    Integer create(Category category) throws EtBadRequestException;
 
     void update(Category category) throws EtBadRequestException;
 
-    void removeById(Category category);
+    void removeById(Integer userId, Integer categoryId);
 
 
 }

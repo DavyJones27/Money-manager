@@ -18,6 +18,13 @@ import java.util.List;
 @Repository
 public class CategoryRepositoryImpl implements CategoryRepository {
 
+    public static final String SQL_DELETE_CATEGORY = "DELETE FROM  ET_CATEGORIES " +
+            "WHERE USER_ID = ? AND CATEGORY_ID = ?";
+
+    public static final String SQL_DELETE_ALL_TRANSACTION = "DELETE FROM ET_TRANSACTIONS " +
+            "WHERE CATEGORY_ID = ?";
+
+
     private static final String SQL_CREATE = "INSERT INTO ET_CATEGORIES " +
             "(CATEGORY_ID , USER_ID, TITLE, DESCRIPTION)" +
             "VALUES(NEXTVAL('ET_CATEGORIES_SEQ'), ?, ?, ?)";
@@ -108,7 +115,18 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     }
 
     @Override
-    public void removeById(Category category) {
+    public void removeById(Integer userId, Integer categoryId) {
+
+        this.removeAllCatById(categoryId);
+
+        jdbcTemplate.update(SQL_DELETE_CATEGORY, userId, categoryId);
+
+    }
+
+
+    public void removeAllCatById(Integer categoryId) {
+
+        jdbcTemplate.update(SQL_DELETE_ALL_TRANSACTION, categoryId);
 
     }
 }

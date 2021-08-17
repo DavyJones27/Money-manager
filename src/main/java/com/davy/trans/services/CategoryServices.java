@@ -16,6 +16,6 @@ public interface CategoryServices {
 
     Category updateCategory(Category category) throws EtBadRequestException;
 
-    void removeCategoryWithAllTransaction(Category category) throws EtResourcesNotFoundException;
+    void removeCategoryWithAllTransaction(Integer userId, Integer categoryId) throws EtResourcesNotFoundException;
 
 }
