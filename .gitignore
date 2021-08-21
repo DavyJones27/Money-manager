@@ -31,3 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
+log
+spring-boot-logger-log4j2.log
