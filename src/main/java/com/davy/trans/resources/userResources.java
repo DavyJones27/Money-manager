@@ -8,30 +8,34 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
+@Validated
 public class userResources {
 
     @Autowired
     UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<Map<String, String>> registerUser(@RequestBody User userMap) {
+    public ResponseEntity<Map<String, String>> registerUser(@Valid @RequestBody  User userMap) {
 
         User user = userService.registerUser(userMap);
 
         return new ResponseEntity<>(generateJWTToken(userMap), HttpStatus.OK);
     }
 
+//    TODO add  req and res DTO
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> loginUser(@RequestBody User userMap) {
 
