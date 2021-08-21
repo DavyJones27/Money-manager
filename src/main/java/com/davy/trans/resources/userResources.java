@@ -5,6 +5,8 @@ import com.davy.trans.domain.User;
 import com.davy.trans.services.UserService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,18 +26,26 @@ import java.util.Map;
 @Validated
 public class userResources {
 
+    private static Logger logger = LogManager.getLogger(userResources.class);
+
     @Autowired
     UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<Map<String, String>> registerUser(@Valid @RequestBody  User userMap) {
+    public ResponseEntity<Map<String, String>> registerUser(@Valid @RequestBody User userMap) {
+
+        logger.info("info " + userMap);
+        logger.debug("debug " + userMap);
+        logger.warn("warn" + userMap);
+        logger.error("error " + userMap);
+        logger.trace("trace " + userMap);
 
         User user = userService.registerUser(userMap);
 
         return new ResponseEntity<>(generateJWTToken(userMap), HttpStatus.OK);
     }
 
-//    TODO add  req and res DTO
+    //    TODO add  req and res DTO
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> loginUser(@RequestBody User userMap) {
 
