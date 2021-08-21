@@ -25,6 +25,6 @@ public class User {
     @EmailCheck
     private String email;
 
-    @Size(min = 4, max = 8, message = "btw 2 - 4")
+    @Size(min = 4, max = 20, message = "btw 2 - 4")
     private String password;
 }
