@@ -23,7 +23,7 @@ public class LoggingAspect {
     @Around("within(@org.springframework.web.bind.annotation.RestController *)")
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
 
-        logger.info(
+        logger.debug(
                 "Request for {}.{}() with arguments[s]={}",
                 joinPoint.getSignature().getDeclaringTypeName(),
                 joinPoint.getSignature().getName(),
@@ -38,7 +38,7 @@ public class LoggingAspect {
 
         long timeElapsed = Duration.between(start, finish).toMillis();
 
-        logger.info(
+        logger.debug(
                 "Response for {}.{} with result= {}",
                 joinPoint.getSignature().getDeclaringTypeName(),
                 joinPoint.getSignature().getName(),
