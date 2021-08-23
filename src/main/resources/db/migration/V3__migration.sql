@@ -1,0 +1,1 @@
+drop table if exists et_ajay;
