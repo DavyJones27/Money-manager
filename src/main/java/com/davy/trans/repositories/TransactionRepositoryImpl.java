@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.Arrays;
 import java.util.List;
 
 @Repository
@@ -82,6 +83,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
         try {
 
             KeyHolder keyHolder = new GeneratedKeyHolder();
+            System.out.println(transaction);
             jdbcTemplate.update(connection -> {
                 PreparedStatement ps = connection.prepareStatement(SQL_CREATE, Statement.RETURN_GENERATED_KEYS);
                 ps.setInt(1, transaction.getCategoryId());
@@ -92,6 +94,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
 
                 return ps;
             }, keyHolder);
+
 
             return (Integer) keyHolder.getKeys().get("TRANSACTION_ID");
         } catch (Exception e) {

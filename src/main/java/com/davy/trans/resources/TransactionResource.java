@@ -1,6 +1,7 @@
 package com.davy.trans.resources;
 
 import com.davy.trans.domain.Transaction;
+import com.davy.trans.filters.CustomFilter;
 import com.davy.trans.services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,7 @@ public class TransactionResource {
     @Autowired
     TransactionService transactionService;
 
+    @CustomFilter(auths = {"ajay", "aman"})
     @PostMapping("")
     public ResponseEntity<Transaction> addTransaction(
             HttpServletRequest request,
